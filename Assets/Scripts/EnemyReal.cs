@@ -8,6 +8,9 @@ public class EnemyReal : MonoBehaviour
     NavMeshAgent navMeshAgent;
     Transform player;
     Animator animator;
+    public bool isAttackCheck = false;
+    public int hp = 2;
+    bool isStop = false;
 
     private void Start()
     {
@@ -23,15 +26,16 @@ public class EnemyReal : MonoBehaviour
             if(Vector3.Distance(this.transform.position, player.position) < navMeshAgent.stoppingDistance + 0.1f)
             {
                 navMeshAgent.isStopped = true;
+                animator.SetBool("isWalk", false);
                 StartCoroutine("Attack");
             }
             else
             {
                 navMeshAgent.isStopped = false;
+                animator.SetBool("isWalk", true);
                 navMeshAgent.destination = player.position;
             }
         }
-
         this.transform.LookAt(player.position);
     }
 
@@ -47,6 +51,20 @@ public class EnemyReal : MonoBehaviour
         else
         {
             navMeshAgent.isStopped = false;
+        }
+    }
+    public void SetHp(int damage)
+    {
+        if (!isStop)
+        {
+            hp -= damage;
+            if (hp <= 0)
+            {
+                hp = 0;
+                Debug.Log("die");
+                animator.SetTrigger("Death");
+                isStop = true;
+            }
         }
     }
 }

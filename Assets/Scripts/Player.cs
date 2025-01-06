@@ -9,7 +9,8 @@ public class Player : MonoBehaviour
     Animator animator;
     bool isWalk = false;
     public bool isAttackCheck = false;
-    int hp = 2;
+    public int hp = 2;
+    bool isStop = false;
     public GameObject PrefabBullet;
     public Transform BulletPoint;
 
@@ -70,6 +71,21 @@ public class Player : MonoBehaviour
             animator.SetBool("isWalk", false);
         }
 
+    }
+
+    public void SetHp(int damage)
+    {
+        if (!isStop)
+        {
+            hp -= damage;
+            if(hp <= 0)
+            {
+                hp = 0;
+                Debug.Log("GameOver");
+                animator.SetTrigger("Death");
+                isStop = true;
+            }
+        }
     }
 
     void Attack()
