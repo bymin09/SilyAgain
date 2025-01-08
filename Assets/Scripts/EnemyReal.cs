@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,9 +26,13 @@ public class EnemyReal : MonoBehaviour
         {
             if(Vector3.Distance(this.transform.position, player.position) < navMeshAgent.stoppingDistance + 0.1f)
             {
-                navMeshAgent.isStopped = true;
-                animator.SetBool("isWalk", false);
-                StartCoroutine("Attack");
+                if (!isStop)
+                {
+                    navMeshAgent.isStopped = true;
+                    animator.SetBool("isWalk", false);
+                    isAttackCheck = true;
+                    StartCoroutine("Attack");
+                }
             }
             else
             {
@@ -36,7 +41,10 @@ public class EnemyReal : MonoBehaviour
                 navMeshAgent.destination = player.position;
             }
         }
-        this.transform.LookAt(player.position);
+        if (!isStop)
+        {
+            this.transform.LookAt(player.position);
+        }
     }
 
     IEnumerator Attack()
@@ -46,7 +54,11 @@ public class EnemyReal : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         if (Vector3.Distance(this.transform.position, player.position) < navMeshAgent.stoppingDistance + 0.1f)
         {
-            StartCoroutine("Attack");
+            if(!isStop)
+            {
+                isAttackCheck=true;
+                StartCoroutine("Attack");
+            }
         }
         else
         {
@@ -63,6 +75,7 @@ public class EnemyReal : MonoBehaviour
                 hp = 0;
                 Debug.Log("die");
                 animator.SetTrigger("Death");
+                isAttackCheck = false;
                 isStop = true;
             }
         }

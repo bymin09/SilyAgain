@@ -83,6 +83,8 @@ public class Player : MonoBehaviour
                 hp = 0;
                 Debug.Log("GameOver");
                 animator.SetTrigger("Death");
+                isAttackCheck = false;
+                isLive = false;
                 isStop = true;
             }
         }
@@ -103,6 +105,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             isBullet = true;
+            isAttackCheck = true;
             animator.SetTrigger("isAttack");
             //Invoke("SpawnBullet", 0.2f);
         }
