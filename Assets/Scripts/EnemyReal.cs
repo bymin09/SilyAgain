@@ -12,6 +12,12 @@ public class EnemyReal : MonoBehaviour
     public bool isAttackCheck = false;
     public int hp = 2;
     bool isStop = false;
+    Renderer[] renderers;
+    Color originColor;
+    public float navDistance = 15.0f;
+
+    public float spawnItemPossible = 20.0f;
+    public GameObject prefabItem;
 
     private void Start()
     {
@@ -19,33 +25,29 @@ public class EnemyReal : MonoBehaviour
         animator = this.GetComponent<Animator>();
         player = GameObject.Find("Player").transform;
         navMeshAgent.destination = player.position;
+        renderers = this.GetComponentsInChildren<Renderer>();
+        originColor = renderers[0].material.color;
     }
     private void Update()
     {
-        if (!isStop)
+        if (isStop || Vector3.Distance(this.transform.position, player.position) > navDistance)
         {
-            if (!navMeshAgent.isStopped)
-            {
-                if (Vector3.Distance(this.transform.position, player.position) < navMeshAgent.stoppingDistance + 0.1f)
-                {
-                    if (!isStop)
-                    {
-                        navMeshAgent.isStopped = true;
-                        animator.SetBool("isWalk", false);
-                        isAttackCheck = true;
-                        StartCoroutine("Attack");
-                    }
-                }
-                else
-                {
-                    navMeshAgent.isStopped = false;
-                    animator.SetBool("isWalk", true);
-                    navMeshAgent.destination = player.position;
-                }
-            }
-            this.transform.LookAt(player.position);
+            navMeshAgent.isStopped = true;
+            return;
         }
-        
+
+        if (Vector3.Distance(this.transform.position, player.position) < navMeshAgent.stoppingDistance + 0.1f)
+        {
+            navMeshAgent.isStopped = true;
+            StartCoroutine("Attack");
+        }
+        else
+        {
+            navMeshAgent.isStopped = false;
+            navMeshAgent.destination = player.position;
+        }
+        this.transform.LookAt(player.position);
+
     }
 
     IEnumerator Attack()
@@ -78,7 +80,32 @@ public class EnemyReal : MonoBehaviour
                 animator.SetTrigger("Death");
                 isAttackCheck = false;
                 isStop = true;
+                navMeshAgent.isStopped = true;
+                DropItem();
+                Destroy(this.gameObject);
             }
+            else
+            {
+                StartCoroutine("HitColor");
+            }
+        }
+    }
+
+    void DropItem()
+    {
+        Instantiate(prefabItem, this.transform.position, this.transform.rotation);
+    }
+
+    IEnumerator HitColor()
+    {
+        foreach (Renderer render in renderers)
+        {
+            render.material.color = Color.red;
+        }
+        yield return new WaitForSeconds(0.5f);
+        foreach (Renderer render in renderers)
+        {
+            render.material.color = originColor;
         }
     }
 }

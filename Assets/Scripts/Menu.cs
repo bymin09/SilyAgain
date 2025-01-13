@@ -15,7 +15,7 @@ public class Menu : MonoBehaviour
     }
     public MenuStatus menuStatus = MenuStatus.None;
 
-    TextMeshProUGUI title;
+    public TextMeshProUGUI title;
 
     void Start()
     {

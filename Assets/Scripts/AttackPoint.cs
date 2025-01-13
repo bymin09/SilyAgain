@@ -7,6 +7,12 @@ public class AttackPoint : MonoBehaviour
     public EnemyReal enemy;
     public Player player;
     public int damage;
+
+    private void Start()
+    {
+        
+    }
+
     public enum Char
     {
         Player,
@@ -31,6 +37,7 @@ public class AttackPoint : MonoBehaviour
             case Char.Enemy:
                 if (other.CompareTag("Player"))
                 {
+                    Player player = other.GetComponent<Player>();
                     if (enemy.isAttackCheck)
                     {
                         Debug.Log(other.tag);

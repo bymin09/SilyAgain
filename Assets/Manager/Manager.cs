@@ -38,14 +38,14 @@ public class Manager : Singleton<Manager>
         Time.timeScale = 0;
         isPause = true;
 
-        //Menu.SetMenu(Menu.MenuStatus.Pause);
+        menu.SetMenu(Menu.MenuStatus.Pause);
     }
 
     public void ContinueGame()
     {
         Time.timeScale = 1;
         isPause = false;
-        //Menu.SetMenu(Menu.MenuStatus.Continue);
+        menu.SetMenu(Menu.MenuStatus.Continue);
     }
 
     public void RestartGame()

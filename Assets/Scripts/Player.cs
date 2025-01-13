@@ -18,10 +18,17 @@ public class Player : MonoBehaviour
     public float BulletTime = 0f;
     bool isBullet = false;
     bool isLive = true;
+    bool isItemSpeed = false;
+    float itemSpeed = 10.0f;
+    int maxHp = 10;
+    float ItemSpeedTimeSpan;
+    float itemSpeedTimer;
+    float baseSpeed;
 
     // Start is called before the first frame update
     void Start()
     {
+        baseSpeed = speed;
         characterController = this.GetComponent<CharacterController>();
         animator = this.GetComponent<Animator>();
     }
@@ -34,6 +41,7 @@ public class Player : MonoBehaviour
             Walk();
             Attack();
             Rotation();
+            ItemSpeedTimer();
         }
     }
 
@@ -134,6 +142,35 @@ public class Player : MonoBehaviour
             Vector3 mousePoint = ray.GetPoint(rayLength);
 
             this.transform.LookAt(new Vector3(mousePoint.x, this.transform.position.y, mousePoint.z));
+        }
+    }
+
+    public void ItemPotion()
+    {
+        hp = maxHp;
+    }
+
+    public void ItemSpeed()
+    {
+        speed = itemSpeed;
+        isItemSpeed = true;
+    }
+
+    void SetBaseSpeed()
+    {
+        speed = baseSpeed;
+    }
+
+    public void ItemSpeedTimer()
+    {
+        if(isItemSpeed)
+        {
+            ItemSpeedTimeSpan += Time.deltaTime;
+            if(ItemSpeedTimeSpan >= itemSpeedTimer)
+            {
+                isItemSpeed = false;
+                ItemSpeedTimeSpan = 0;
+            }
         }
     }
 
