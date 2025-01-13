@@ -92,27 +92,34 @@ public class Player : MonoBehaviour
 
     void Attack()
     {
-        //if (isBullet)
-        //{
-        //    BulletTime += Time.deltaTime;
-        //    if (BulletTime >= BulletDelay)
-        //    {
-        //        isBullet = false;
-        //        BulletTime = 0;
-        //    }
-        //}
-
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (isBullet)
         {
-            isBullet = true;
-            isAttackCheck = true;
-            animator.SetTrigger("isAttack");
-            //Invoke("SpawnBullet", 0.2f);
+            BulletTime += Time.deltaTime;
+            if (BulletTime >= BulletDelay)
+            {
+                isBullet = false;
+                BulletTime = 0;
+            }
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                isBullet = true;
+                animator.SetTrigger("isShoot");
+                Invoke("SpawnBullet", 0.2f);
+            }
+
         }
         //if (Input.GetKeyDown(KeyCode.Mouse0))
         //{
         //    animator.SetTrigger("isAttack");
         //}
+    }
+
+    void SpawnBullet()
+    {
+        Instantiate(PrefabBullet, BulletPoint.position, this.transform.rotation);
     }
 
     void Rotation()
@@ -128,5 +135,10 @@ public class Player : MonoBehaviour
 
             this.transform.LookAt(new Vector3(mousePoint.x, this.transform.position.y, mousePoint.z));
         }
+    }
+
+    public void GameOver()
+    {
+        Manager.Instance.PauseGame();
     }
 }

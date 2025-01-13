@@ -22,29 +22,30 @@ public class EnemyReal : MonoBehaviour
     }
     private void Update()
     {
-        if(!navMeshAgent.isStopped)
-        {
-            if(Vector3.Distance(this.transform.position, player.position) < navMeshAgent.stoppingDistance + 0.1f)
-            {
-                if (!isStop)
-                {
-                    navMeshAgent.isStopped = true;
-                    animator.SetBool("isWalk", false);
-                    isAttackCheck = true;
-                    StartCoroutine("Attack");
-                }
-            }
-            else
-            {
-                navMeshAgent.isStopped = false;
-                animator.SetBool("isWalk", true);
-                navMeshAgent.destination = player.position;
-            }
-        }
         if (!isStop)
         {
+            if (!navMeshAgent.isStopped)
+            {
+                if (Vector3.Distance(this.transform.position, player.position) < navMeshAgent.stoppingDistance + 0.1f)
+                {
+                    if (!isStop)
+                    {
+                        navMeshAgent.isStopped = true;
+                        animator.SetBool("isWalk", false);
+                        isAttackCheck = true;
+                        StartCoroutine("Attack");
+                    }
+                }
+                else
+                {
+                    navMeshAgent.isStopped = false;
+                    animator.SetBool("isWalk", true);
+                    navMeshAgent.destination = player.position;
+                }
+            }
             this.transform.LookAt(player.position);
         }
+        
     }
 
     IEnumerator Attack()
