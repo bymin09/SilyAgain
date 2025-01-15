@@ -10,6 +10,7 @@ public class EnemyReal : MonoBehaviour
     Transform player;
     Animator animator;
     public bool isAttackCheck = false;
+    bool isWalk = true;
     public int hp = 2;
     bool isStop = false;
     Renderer[] renderers;
@@ -30,19 +31,23 @@ public class EnemyReal : MonoBehaviour
     }
     private void Update()
     {
+        Walk();
         if (isStop || Vector3.Distance(this.transform.position, player.position) > navDistance)
         {
+            isWalk = false;
             navMeshAgent.isStopped = true;
             return;
         }
 
         if (Vector3.Distance(this.transform.position, player.position) < navMeshAgent.stoppingDistance + 0.1f)
         {
+            isWalk = false;
             navMeshAgent.isStopped = true;
             StartCoroutine("Attack");
         }
         else
         {
+            isWalk = true;
             navMeshAgent.isStopped = false;
             navMeshAgent.destination = player.position;
         }
@@ -66,6 +71,18 @@ public class EnemyReal : MonoBehaviour
         else
         {
             navMeshAgent.isStopped = false;
+        }
+    }
+
+    void Walk()
+    {
+        if (isWalk == true)
+        {
+            animator.SetBool("isWalk", true);
+        }
+        else
+        {
+            animator.SetBool("isWalk", false);
         }
     }
     public void SetHp(int damage)
